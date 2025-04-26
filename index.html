@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Operator Insights Auth Redirect</title>
+    <script>
+        // Extract code from URL and redirect to app
+        const params = new URLSearchParams(window.location.search);
+        const code = params.get('code');
+        if (code) {
+            window.location.replace(`operatorinsights://oauth/callback?code=${code}`);
+        }
+    </script>
+</head>
+<body>
+    <p>Redirecting back to app...</p>
+</body>
+</html>
