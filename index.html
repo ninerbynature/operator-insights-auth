@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Square OAuth Callback</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        body { 
-            font-family: -apple-system;
-            padding: 20px;
-            text-align: center;
-            line-height: 1.6;
+    <title>Operator Insights Auth Redirect</title>
+    <script>
+        // Extract code from URL and redirect to app
+        const params = new URLSearchParams(window.location.search);
+        const code = params.get('code');
+        if (code) {
+            window.location.replace(`operatorinsights://oauth/callback?code=${code}`);
         }
-    </style>
+    </script>
 </head>
 <body>
-    <h3>Authorization Successful</h3>
-    <p>You can close this window and return to the app.</p>
+    <p>Redirecting back to app...</p>
 </body>
 </html>
