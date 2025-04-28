@@ -3,41 +3,17 @@
 <head>
     <title>Square OAuth Callback</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script>
-        window.onload = function() {
-            // Get code from URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get('code');
-            
-            if (code) {
-                // Try universal links first
-                const appUrl = `operatorinsights://oauth-callback?code=${code}`;
-                window.location.replace(appUrl);
-                
-                // Fallback timeout - if app didn't open, show error
-                setTimeout(function() {
-                    document.getElementById('message').innerHTML = 
-                        'If the app did not open automatically, copy this code and paste it in the app:<br><br>' +
-                        '<code style="padding: 8px; background: #eee; border-radius: 4px;">' + code + '</code>';
-                }, 1500);
-            } else {
-                document.getElementById('message').innerText = 'Error: No authorization code received';
-            }
-        }
-    </script>
     <style>
-        body {
-            font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu;
+        body { 
+            font-family: -apple-system;
             padding: 20px;
             text-align: center;
             line-height: 1.6;
         }
-        #message {
-            margin-top: 40px;
-        }
     </style>
 </head>
 <body>
-    <h3 id="message">Redirecting to app...</h3>
+    <h3>Authorization Successful</h3>
+    <p>You can close this window and return to the app.</p>
 </body>
 </html>
