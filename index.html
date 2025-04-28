@@ -12,20 +12,23 @@
             height: 100vh;
             margin: 0;
             background: #f5f5f7;
+            color: #1d1d1f;
         }
         .container {
             text-align: center;
-            padding: 20px;
+            padding: 40px;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            max-width: 90%;
+            width: 400px;
         }
         .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #007AFF;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007AFF;
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
             margin: 20px auto;
         }
@@ -33,51 +36,69 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        .success {
+            color: #34C759;
+        }
+        .error {
+            color: #FF3B30;
+        }
+        .logo {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="logo">🏪</div>
         <div class="spinner"></div>
-        <p id="status">Authorizing...</p>
+        <h2>Operator Insights</h2>
+        <p id="status">Completing authorization...</p>
     </div>
-    
+
     <script>
-        function getQueryParam(param) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
-        }
+        const statusEl = document.getElementById('status');
         
-        function handleAuth() {
-            const code = getQueryParam('code');
-            const error = getQueryParam('error');
-            const statusElement = document.getElementById('status');
+        function handleCallback() {
+            // Get the code from URL parameters
+            const params = new URLSearchParams(window.location.search);
+            const code = params.get('code');
+            const error = params.get('error');
             
             if (error) {
-                statusElement.textContent = 'Authorization failed: ' + error;
+                statusEl.textContent = `Authorization failed: ${error}`;
+                statusEl.className = 'error';
                 return;
             }
             
             if (!code) {
-                statusElement.textContent = 'No authorization code received';
+                statusEl.textContent = 'No authorization code received';
+                statusEl.className = 'error';
                 return;
             }
             
-            // Use universal links to pass the code back to the app
-            const appUrl = `operatorinsights://oauth/callback?code=${code}`;
-            statusElement.textContent = 'Authorization successful! Returning to app...';
+            // Create the callback URL with the authorization code
+            const callbackURL = `operatorinsights://oauth/callback?code=${encodeURIComponent(code)}`;
             
-            // Attempt to open the app
-            window.location.href = appUrl;
+            // Update status
+            statusEl.textContent = 'Authorization successful! Returning to app...';
+            statusEl.className = 'success';
             
-            // Fallback for if app isn't installed
+            // Try to open the app
             setTimeout(() => {
-                if (document.hidden) return; // App opened successfully
-                statusElement.textContent = 'Please open the Operator Insights app';
+                window.location.href = callbackURL;
+                
+                // Fallback if app doesn't open
+                setTimeout(() => {
+                    if (!document.hidden) {
+                        statusEl.textContent = 'Please return to Operator Insights app';
+                    }
+                }, 2000);
             }, 1500);
         }
         
-        // Start auth handling when page loads
-        window.onload = handleAuth;
+        // Start handling when page loads
+        window.onload = handleCallback;
     </script>
 </body>
 </html>
